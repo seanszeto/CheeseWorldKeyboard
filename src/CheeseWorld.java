@@ -26,7 +26,7 @@ public class CheeseWorld implements Runnable, KeyListener {
 
     //Sets the width and height of the program window
     final int WIDTH = 1000;
-    final int HEIGHT = 700;
+    final int HEIGHT = 650;
 
     //Declare the variables needed for the graphics
     public JFrame frame;
@@ -58,7 +58,7 @@ public class CheeseWorld implements Runnable, KeyListener {
         setUpGraphics();
 
         /***
-         * Step 3 for keyboard control - addKeyListener(this) to the canvas
+         * Step 2 for keyboard control - addKeyListener(this) to the canvas
          */
         canvas.addKeyListener(this);
 
@@ -70,7 +70,7 @@ public class CheeseWorld implements Runnable, KeyListener {
         //create (construct) the objects needed for the game
         mouse1 = new Mouse(200, 300, 4, 4, mousePic);
         theCheese = new Cheese(400, 300, 3, -4, cheesePic);
-        user = new Player(250, 250, 5, 5, tomPic);
+        user = new Player(250, 250, 0, 0, tomPic);
 
     } // CheeseWorld()
 
@@ -114,7 +114,7 @@ public class CheeseWorld implements Runnable, KeyListener {
     }
 
     /***
-     * Step 4 for keyboard control - add required methods
+     * Step 3 for keyboard control - add required methods
      * You need to have all 3 even if you aren't going to use them all
      */
     public void keyPressed(KeyEvent event) {
@@ -124,11 +124,20 @@ public class CheeseWorld implements Runnable, KeyListener {
         int keyCode = event.getKeyCode();  //gets the keyCode (an integer) of the key pressed
         System.out.println("Key Pressed: " + key + "  Code: " + keyCode);
 
-        if (keyCode == 68) {
+        if (keyCode == 68) { // d
             user.right = true;
         }
-        if (keyCode == 83) {
+        if (keyCode == 65) { // a
+            user.left = true;
+        }
+//        if (keyCode == 32) { // space bar
+//            user.dy = -15;
+//        }
+        if (keyCode == 83) { // s
             user.down = true;
+        }
+        if (keyCode == 87) { // w
+            user.up = true;
         }
     }//keyPressed()
 
@@ -136,11 +145,17 @@ public class CheeseWorld implements Runnable, KeyListener {
         char key = event.getKeyChar();
         int keyCode = event.getKeyCode();
         //This method will do something when a key is released
-        if (keyCode == 68) {
+        if (keyCode == 68) { // d
             user.right = false;
         }
-        if (keyCode == 83) {
+        if (keyCode == 65) { // a
+            user.left = false;
+        }
+        if (keyCode == 83) { // s
             user.down = false;
+        }
+        if (keyCode == 87) { // w
+            user.up = false;
         }
 
     }//keyReleased()

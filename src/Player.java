@@ -16,7 +16,9 @@ public class Player {
 
     //movement booleans
     public boolean right;
+    public boolean left;
     public boolean down;
+    public boolean up;
 
 
     public Player(int pXpos, int pYpos, int dxParameter, int dyParameter, Image picParameter) {
@@ -35,38 +37,67 @@ public class Player {
 
     //move( ) method for a keyboard controlled character
     public void move() {
+        xpos = xpos + dx;
+        ypos = ypos + dy;
 
-        if(right){
-            xpos = xpos +dx;
-            if(xpos>1000-width){
-                xpos = 1000-width;
-            }
+        if(right == true){
+           dx = 2;
+        } else if (left == true) {
+            dx = -2;
+        } else { // (right == false && left == false)
+            dx = 0;
         }
 
-        if(down){
-            ypos = ypos +dy;
-            if(ypos>700-height){
-                ypos = 700-height;
-            }
+        if(down == true){
+            dy = 2;
+        } else if (up == true) {
+            dy = -2;
+        } else {
+            dy = 0;
         }
+
+        if(xpos>1000-width){ // right
+            xpos = 1000-width;
+        }
+        if(xpos < 0) { // left
+            xpos = 0;
+        }
+        if(ypos>650-height){ // down
+            ypos = 650-height;
+        }
+        if(ypos < 0) { // up
+            ypos = 0;
+        }
+
 
         //always put this after you've done all the changing of the xpos and ypos values
         rec = new Rectangle(xpos, ypos, width, height);
 
     }
 
+    public void move2() {
+        xpos = xpos + dx;
+        ypos = ypos + dy;
 
+        if (ypos < 250) {
+            dy = dy + 1;
+        }
+        if (ypos > 250) {
+            ypos = 250;
+        }
 
-
-
-
-
-
-
-
-
-
-
-
+        if(xpos>1000-width){ // right
+            xpos = 1000-width;
+        }
+        if(xpos < 0) { // left
+            xpos = 0;
+        }
+        if(ypos>650-height){ // down
+            ypos = 650-height;
+        }
+        if(ypos < 0) { // up
+            ypos = 0;
+        }
+    }
 
 }
