@@ -42,6 +42,8 @@ public class CheeseWorld implements Runnable, KeyListener {
     //Declare the character objects
     public Mouse mouse1;
     public Cheese theCheese;
+    public Cheese cheese2;
+    public Cheese[] cheeses;
     public Player user;
 
     // Main method definition
@@ -70,6 +72,15 @@ public class CheeseWorld implements Runnable, KeyListener {
         //create (construct) the objects needed for the game
         mouse1 = new Mouse(200, 300, 4, 4, mousePic);
         theCheese = new Cheese(400, 300, 3, -4, cheesePic);
+        cheese2 = new Cheese(200, 500, -6, 3, cheesePic);
+
+        // construct the array
+        cheeses = new Cheese[5];
+        // fill the array by constructing all the cheeses inside it
+        for (int x = 0; x < 5; x++) {
+            cheeses[x] = new Cheese(x*100+100, 400, 3, 3, cheesePic);
+        }
+
         user = new Player(250, 250, 0, 0, tomPic);
 
     } // CheeseWorld()
@@ -83,10 +94,25 @@ public class CheeseWorld implements Runnable, KeyListener {
     public void moveThings() {
         mouse1.move();
         theCheese.move();
+
+        for (int x = 0; x < 5; x++) {
+            cheeses[x].move();
+        }
+
         user.move();
     }
 
     public void checkIntersections() {
+
+        if (user.rec.intersects(theCheese.rec)) {
+            theCheese.isAlive = false;
+        }
+
+        for (int x = 0; x < 5; x++) {
+            if (user.rec.intersects(cheeses[x].rec)) {
+                cheeses[x].isAlive = false;
+            }
+        }
 
     }
 
@@ -106,7 +132,18 @@ public class CheeseWorld implements Runnable, KeyListener {
 
         //draw characters to the screen
         g.drawImage(mouse1.pic, mouse1.xpos, mouse1.ypos, mouse1.width, mouse1.height, null);
-        g.drawImage(theCheese.pic, theCheese.xpos, theCheese.ypos, theCheese.width, theCheese.height, null);
+        if (theCheese.isAlive == true) {
+            g.drawImage(theCheese.pic, theCheese.xpos, theCheese.ypos, theCheese.width, theCheese.height, null);
+        }
+        g.drawImage(cheese2.pic, cheese2.xpos, cheese2.ypos, cheese2.width, cheese2.height, null);
+
+        // render the cheeses array
+        for (int x = 0; x < 5; x++) {
+            if (cheeses[x].isAlive == true) {
+                g.drawImage(cheeses[x].pic, cheeses[x].xpos, cheeses[x].ypos, cheeses[x].width, cheeses[x].height, null);
+            }
+        }
+
         g.drawImage(user.pic, user.xpos, user.ypos, user.width, user.height, null);
 
         g.dispose();
