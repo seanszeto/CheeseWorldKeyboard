@@ -34,6 +34,8 @@ public class CheeseWorld implements Runnable, KeyListener {
     public JPanel panel;
     public BufferStrategy bufferStrategy;
 
+    public boolean gameStart = false;
+
     //Declare the variables needed for images
     public Image cheesePic;
     public Image mousePic;
@@ -42,6 +44,10 @@ public class CheeseWorld implements Runnable, KeyListener {
     //Declare the character objects
     public Mouse mouse1;
     public Cheese theCheese;
+    public Cheese cheese2;
+    public Cheese[] stinky;
+
+
     public Player user;
 
     // Main method definition
@@ -70,7 +76,15 @@ public class CheeseWorld implements Runnable, KeyListener {
         //create (construct) the objects needed for the game
         mouse1 = new Mouse(200, 300, 4, 4, mousePic);
         theCheese = new Cheese(400, 300, 3, -4, cheesePic);
-        user = new Player(250, 250, 5, 5, tomPic);
+        cheese2 = new Cheese(200, 500, 0, 0, cheesePic);
+        // construct stinky array
+        stinky = new Cheese[5];
+        // fill stinky array with constructed cheese
+        for (int x = 0; x < stinky.length; x++) {
+            stinky[x] = new Cheese(x*100+400, 400, 4, 3, cheesePic);
+        }
+        // stinky[0].xpos
+        user = new Player(250, 250, 0, 0, tomPic);
 
     } // CheeseWorld()
 
@@ -83,17 +97,28 @@ public class CheeseWorld implements Runnable, KeyListener {
     public void moveThings() {
         mouse1.move();
         theCheese.move();
-        user.move();
+        for (int x = 0; x < stinky.length; x++) {
+            stinky[x].move();
+        }
+        user.move3();
     }
 
     public void checkIntersections() {
+
+        for (int x = 0; x < stinky.length; x++) {
+            if (stinky[x].rec.intersects(mouse1.rec)) {
+                stinky[x].isAlive = false;
+            }
+        }
 
     }
 
     public void run() {
         while (true) {
-            moveThings();           //move all the game objects
-            checkIntersections();   // check character crashes
+            if (gameStart == true) {
+                moveThings();           //move all the game objects
+                checkIntersections();   // check character crashes
+            }
             render();               // paint the graphics
             pause(20);         // sleep for 20 ms
         }
@@ -104,10 +129,25 @@ public class CheeseWorld implements Runnable, KeyListener {
         Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();
         g.clearRect(0, 0, WIDTH, HEIGHT);
 
-        //draw characters to the screen
-        g.drawImage(mouse1.pic, mouse1.xpos, mouse1.ypos, mouse1.width, mouse1.height, null);
-        g.drawImage(theCheese.pic, theCheese.xpos, theCheese.ypos, theCheese.width, theCheese.height, null);
-        g.drawImage(user.pic, user.xpos, user.ypos, user.width, user.height, null);
+        if (gameStart == false) {
+            g.setColor(Color.PINK);
+            g.fillRect(0,0,WIDTH, HEIGHT);
+            g.setColor(Color.BLACK);
+            g.drawString("Press enter to start", 350, 250);
+        } // draw start screen
+        else { // gameStart is true
+            //draw characters to the screen
+            g.drawImage(mouse1.pic, mouse1.xpos, mouse1.ypos, mouse1.width, mouse1.height, null);
+            g.drawImage(theCheese.pic, theCheese.xpos, theCheese.ypos, theCheese.width, theCheese.height, null);
+            g.drawImage(cheese2.pic, cheese2.xpos, cheese2.ypos, cheese2.width, cheese2.height, null);
+            // render all the stinky cheeses
+            for (int x = 0; x < stinky.length; x++) {
+                if (stinky[x].isAlive == true) {
+                    g.drawImage(stinky[x].pic, stinky[x].xpos, stinky[x].ypos, stinky[x].width, stinky[x].height, null);
+                }
+            }
+            g.drawImage(user.pic, user.xpos, user.ypos, user.width, user.height, null);
+        }
 
         g.dispose();
         bufferStrategy.show();
@@ -124,24 +164,48 @@ public class CheeseWorld implements Runnable, KeyListener {
         int keyCode = event.getKeyCode();  //gets the keyCode (an integer) of the key pressed
         System.out.println("Key Pressed: " + key + "  Code: " + keyCode);
 
-        if (keyCode == 68) {
+        if (keyCode == 10) { // start game with enter key
+            gameStart = true;
+        }
+
+        if (keyCode == 68) { // d
             user.right = true;
         }
-        if (keyCode == 83) {
+        if (keyCode == 65) { // a
+            user.left = true;
+        }
+        if (keyCode == 87) { // w
+            user.up = true;
+        }
+        if (keyCode == 83) { // s
             user.down = true;
         }
+        if (keyCode == 32 && user.jumps < 2) { // space bar
+            user.dy = -20;
+            user.jumps++;
+        }
+
     }//keyPressed()
 
     public void keyReleased(KeyEvent event) {
         char key = event.getKeyChar();
         int keyCode = event.getKeyCode();
         //This method will do something when a key is released
-        if (keyCode == 68) {
+        if (keyCode == 68) { // d
             user.right = false;
         }
-        if (keyCode == 83) {
+        if (keyCode == 65) { // a
+            user.left = false;
+        }
+        if (keyCode == 87) { // w
+            user.up = false;
+        }
+        if (keyCode == 83) { // s
             user.down = false;
         }
+//        if (keyCode == 32 && user.ypos == 250) { // space bar
+//            user.dy = -15;
+//        }
 
     }//keyReleased()
 

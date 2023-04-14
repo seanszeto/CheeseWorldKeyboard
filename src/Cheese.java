@@ -23,10 +23,10 @@ public class Cheese {
 
     //This is a constructor that takes 3 parameters.  This allows us to specify the object's name and position when we build it.
     // if you put in a String, an int and an int the program will use this constructor instead of the one above.
-    public Cheese(int pXpos, int pYpos) {
+    public Cheese(int xpos, int ypos) {
 
-        xpos = pXpos;
-        ypos = pYpos;
+        this.xpos = xpos;
+        this.ypos = ypos;
         width = 50;
         height = 50;
         dx = 5;
